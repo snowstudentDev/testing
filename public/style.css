@@ -1,0 +1,173 @@
+:root {
+    --magenta: #ff00ff;
+    --magenta-dark: #cc00cc;
+    --background: #1a1a1a;
+    --surface: #2d2d2d;
+    --text: #ffffff;
+    --text-secondary: #b3b3b3;
+}
+
+[data-theme="light"] {
+    --background: #ffffff;
+    --surface: #f0f0f0;
+    --text: #1a1a1a;
+    --text-secondary: #666666;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    transition: background 0.3s, color 0.3s;
+}
+
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: var(--background);
+    color: var(--text);
+    min-height: 100vh;
+}
+
+.theme-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    cursor: pointer;
+    font-size: 24px;
+    background: none;
+    border: none;
+    color: var(--text);
+}
+
+/* Server Browser Styles */
+.server-screen {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 20px;
+}
+
+.server-browser h1 {
+    color: var(--magenta);
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.server-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.join-server {
+    display: flex;
+    gap: 10px;
+}
+
+.magenta-btn {
+    background: var(--magenta);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.magenta-btn:hover {
+    background: var(--magenta-dark);
+}
+
+input[type="text"] {
+    padding: 12px;
+    border: 2px solid var(--surface);
+    border-radius: 8px;
+    background: var(--surface);
+    color: var(--text);
+    flex-grow: 1;
+}
+
+.server-list {
+    display: grid;
+    gap: 15px;
+}
+
+.server-card {
+    background: var(--surface);
+    padding: 20px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Game UI Styles */
+.game-container {
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 20px;
+}
+
+.clicker-btn {
+    background: var(--magenta);
+    color: white;
+    padding: 30px 60px;
+    font-size: 24px;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    margin: 20px 0;
+}
+
+.clicker-btn:hover {
+    background: var(--magenta-dark);
+}
+
+.players-list {
+    background: var(--surface);
+    padding: 20px;
+    border-radius: 10px;
+    margin: 20px 0;
+}
+
+.chat-box {
+    background: var(--surface);
+    border-radius: 10px;
+    padding: 20px;
+}
+
+.chat-messages {
+    height: 200px;
+    overflow-y: auto;
+    margin-bottom: 15px;
+}
+
+/* Username Modal */
+.username-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background: var(--surface);
+    padding: 30px;
+    border-radius: 15px;
+    width: 400px;
+    text-align: center;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 15px 0;
+}
+

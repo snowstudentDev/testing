@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Magenta Clicker</title>
+    <style>
+        :root {
+            --magenta: #ff00ff;
+            --magenta-dark: #cc00cc;
+            --bg: #1a1a1a;
+            --surface: #2d2d2d;
+            --text: #fff;
+            --gap: 1rem;
+        }
+
+        [data-theme="light"] {
+            --bg: #ffffff;
+            --surface: #f0f0f0;
+            --text: #1a1a1a;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            transition: 0.3s;
+        }
+
+        body {
+            font-family: system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: grid;
+            place-items: center;
+        }
+
+        /* Input Styles for Clicker Game */
+        input[type="text"] {
+            padding: 12px 20px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text);
+            font-size: 16px;
+            transition: all 0.3s ease;
+            width: 100%;
+            backdrop-filter: blur(5px);
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: var(--magenta);
+            box-shadow: 0 0 0 3px rgba(255, 0, 255, 0.15);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        /* Specific to Username Input */
+        #usernameInput {
+            padding: 16px 24px;
+            border-radius: 20px;
+            font-size: 18px;
+            border: 2px solid var(--magenta);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Server Code Input */
+        #serverCode {
+            padding: 14px 20px;
+            border-radius: 12px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        /* Chat Input */
+        #chatInput {
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Placeholder Styling */
+        ::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        [data-theme="light"] ::placeholder {
+            color: rgba(0, 0, 0, 0.4);
+        }
+
+        /* Checkbox Styling */
+        .checkbox-label input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            border-radius: 6px;
+            border: 2px solid var(--magenta);
+            background: rgba(255, 255, 255, 0.05);
+            margin-right: 8px;
+            cursor: pointer;
+        }
+
+        .checkbox-label input[type="checkbox"]:checked {
+            background: var(--magenta);
+        }
+
+        .container {
+            width: min(90%, 1200px);
+            margin: 2rem auto;
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text);
+        }
+
+        .server-browser {
+            background: var(--surface);
+            padding: 2rem;
+            border-radius: 1rem;
+            display: grid;
+            gap: var(--gap);
+        }
+
+        .server-list {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .server-card {
+            background: var(--bg);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn {
+            background: linear-gradient(45deg, var(--magenta), var(--magenta-dark));
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+
+        
+        .game-ui {
+            display: none;
+            grid-template-columns: 2fr 1fr;
+            gap: var(--gap);
+            margin-top: 2rem;
+        }
+
+        .click-area {
+            text-align: center;
+        }
+
+        .click-btn {
+            font-size: 1.5rem;
+            padding: 2rem 4rem;
+            margin: 1rem 0;
+        }
+
+        .players-list {
+            background: var(--surface);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            display: grid;
+            gap: 0.5rem;
+        }
+
+        .player {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem;
+        }
+
+        .chat-box {
+            background: var(--surface);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            height: 400px;
+            display: grid;
+            grid-template-rows: 1fr auto;
+        }
+
+        .chat-messages {
+            overflow-y: auto;
+            padding: 1rem;
+            display: grid;
+            gap: 0.5rem;
+        }
+
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            place-items: center;
+        }
+
+        .modal-content {
+            background: var(--surface);
+            padding: 2rem;
+            border-radius: 1rem;
+            width: min(90%, 400px);
+            text-align: center;
+            display: grid;
+            gap: 1rem;
+        }
+
+        .announcement-bar {
+            position: fixed;
+            top: -60px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(45deg, var(--magenta), var(--magenta-dark));
+            color: white;
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(255, 0, 255, 0.3);
+            z-index: 1000;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            max-width: 80%;
+        }
+
+        .announcement-bar.active {
+            top: 20px;
+        }
+
+        .announcement-icon {
+            width: 24px;
+            height: 24px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="announcement-bar" id="announcementBar">
+        <div class="announcement-icon">🎉</div>
+        <span id="announcementText"></span>
+    </div>
+
+    <button class="theme-toggle" id="themeToggle">🌓</button>
+
+    <div class="container">
+        <div class="server-browser">
+            <h1>Snow Helper </h1>
+            <div class="server-controls">
+                <button class="btn" id="createServer">Create Server</button>
+                <div class="join-server">
+                    <input type="text" id="serverCode" placeholder="Enter Code">
+                    <button class="btn" id="joinServer">Join</button>
+                </div>
+            </div>
+            <div class="server-list" id="serverList"></div>
+        </div>
+
+        <div class="game-ui" id="gameUI">
+            <div class="click-area">
+                <h2>Time Left: <span id="timeLeft">10</span>s</h2>
+                <button class="btn click-btn" id="clickButton">CLICK!</button>
+                <button class="btn" id="resetButton">Reset Game</button>
+            </div>
+            
+            <div class="right-panel">
+                <div class="players-list" id="playersList"></div>
+                <div class="chat-box">
+                    <div class="chat-messages" id="chatMessages"></div>
+                    <input type="text" class="chat-input" id="chatInput" placeholder="Type message...">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="usernameModal">
+        <div class="modal-content">
+            <h3>Choose Username</h3>
+            <input type="text" id="usernameInput" placeholder="Username">
+            <label>
+                <input type="checkbox" id="joinGameCheck" checked>
+                Participate in Game
+            </label>
+            <button class="btn" id="submitUsername">Join</button>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+        let currentServer = null;
+
+        // Theme Toggle
+        document.getElementById('themeToggle').addEventListener('click', () => {
+            document.body.dataset.theme = document.body.dataset.theme === 'light' ? 'dark' : 'light';
+            localStorage.setItem('theme', document.body.dataset.theme);
+        });
+        document.body.dataset.theme = localStorage.getItem('theme') || 'dark';
+
+        // Announcement System
+        function showAnnouncement(text, duration = 3000) {
+            const bar = document.getElementById('announcementBar');
+            const textEl = document.getElementById('announcementText');
+            
+            textEl.textContent = text;
+            bar.classList.add('active');
+            
+            setTimeout(() => {
+                bar.classList.remove('active');
+            }, duration);
+        }
+
+        // Server Creation
+        document.getElementById('createServer').addEventListener('click', () => {
+            socket.emit('createServer');
+            document.getElementById('usernameModal').style.display = 'grid';
+        });
+
+        // Server Joining
+        document.getElementById('joinServer').addEventListener('click', () => {
+            currentServer = document.getElementById('serverCode').value.toUpperCase();
+            document.getElementById('usernameModal').style.display = 'grid';
+        });
+
+        // Username Submission
+        document.getElementById('submitUsername').addEventListener('click', () => {
+            const username = document.getElementById('usernameInput').value.trim();
+            const joinGame = document.getElementById('joinGameCheck').checked;
+            
+            if (username) {
+                socket.emit('joinServer', {
+                    code: currentServer,
+                    username,
+                    joinGame
+                });
+                document.getElementById('usernameModal').style.display = 'none';
+                document.getElementById('gameUI').style.display = 'grid';
+            }
+        });
+
+        // Game Actions
+        document.getElementById('clickButton').addEventListener('click', () => {
+            socket.emit('playerAction', { code: currentServer, type: 'click' });
+        });
+
+        document.getElementById('resetButton').addEventListener('click', () => {
+            socket.emit('playerAction', { code: currentServer, type: 'reset' });
+        });
+
+        // Chat System
+        document.getElementById('chatInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && e.target.value.trim()) {
+                socket.emit('chatMessage', {
+                    code: currentServer,
+                    message: e.target.value
+                });
+                e.target.value = '';
+            }
+        });
+
+        // Socket Listeners
+        socket.on('serverList', (servers) => {
+            document.getElementById('serverList').innerHTML = servers
+                .map(server => `
+                    <div class="server-card">
+                        <div>
+                            <h3>${server.code}</h3>
+                            <p>${server.players} players • ${server.status}</p>
+                        </div>
+                        <button class="btn" onclick="joinServer('${server.code}')">Join</button>
+                    </div>
+                `).join('');
+        });
+
+        socket.on('playersUpdate', (players) => {
+            document.getElementById('playersList').innerHTML = players
+                .map(player => `
+                    <div class="player">
+                        <span>${player.username}</span>
+                        ${player.joined ? `<span>${player.clicks} clicks</span>` : '(spectating)'}
+                    </div>
+                `).join('');
+        });
+
+        socket.on('chatMessage', ({ username, message }) => {
+            const chat = document.getElementById('chatMessages');
+            chat.innerHTML += `<div><strong>${username}:</strong> ${message}</div>`;
+            chat.scrollTop = chat.scrollHeight;
+        });
+
+        socket.on('timeUpdate', (time) => {
+            document.getElementById('timeLeft').textContent = time;
+        });
+
+        socket.on('gameMessage', (message) => {
+            showAnnouncement(message);
+        });
+
+        // Helper
+        window.joinServer = (code) => {
+            document.getElementById('serverCode').value = code;
+            document.getElementById('joinServer').click();
+        }
+    </script>
+</body>
+</html>
