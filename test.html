@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Open Embedded URL</title>
+    <script>
+        window.onload = function() {
+            // Open a new window
+            var newWindow = window.open('', '_blank');
+
+            // Write the HTML content to the new window
+            newWindow.document.write(`
+                <!DOCTYPE html>
+                <html lang="en">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>Embedded Content</title>
+                    <style>
+                        body, html {
+                            margin: 0;
+                            padding: 0;
+                            height: 100%;
+                            overflow: hidden;
+                        }
+                        embed {
+                            width: 100%;
+                            height: 100%;
+                            border: none;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <embed src="http://snowhelper.us-3.evennode.com/" type="text/html">
+                </body>
+                </html>
+            `);
+
+            // Close the document stream
+            newWindow.document.close();
+        };
+    </script>
+</head>
+<body>
+    <h1>This page will open a new tab with the embedded URL.</h1>
+</body>
+</html>
